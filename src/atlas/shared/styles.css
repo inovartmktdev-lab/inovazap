@@ -984,6 +984,122 @@ tbody tr:hover {
   width: 20px;
   height: 20px;
 }
+.ai-dropzone {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+  border: 1.5px dashed var(--line);
+  border-radius: 13px;
+  padding: 32px 20px;
+  background: color-mix(in srgb, var(--accent) 4%, var(--surface));
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.ai-dropzone:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+}
+.ai-dropzone > svg {
+  color: var(--accent);
+}
+.ai-dropzone > span {
+  font-size: 12px;
+  color: var(--muted);
+  max-width: 420px;
+}
+.ai-file-list {
+  display: grid;
+  gap: 9px;
+}
+.ai-file-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.ai-file-row > div {
+  flex: 1;
+  min-width: 0;
+}
+.ai-file-row b {
+  display: block;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ai-file-row small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.ai-file-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #fbe4e1;
+  color: #a8493d;
+}
+.ai-file-icon.excel {
+  background: #e4f2e9;
+  color: #2a7052;
+}
+.connection-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.connection-row > div {
+  flex: 1;
+  min-width: 0;
+}
+.connection-row p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.connection-row small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.connection-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #e5eaf3;
+  color: #7b92b7;
+}
+.connection-icon.meta {
+  background: #eaeafd;
+  color: #5b63d8;
+}
+.connection-icon.google {
+  background: #fdece3;
+  color: #d47a3a;
+}
+@media (max-width: 760px) {
+  .connection-row {
+    flex-wrap: wrap;
+  }
+  .connection-row > .btn {
+    width: 100%;
+  }
+}
 .mobile-only {
   display: none;
 }
@@ -6627,15 +6743,4 @@ tbody tr:hover {
   font-size: 9px;
   line-height: 1.7;
   letter-spacing: 0.07em;
-}
-.construction-label b {
-  font-weight: 800;
-}
-.construction-coordinates {
-  position: absolute;
-  right: 20px;
-  bottom: 22px;
-  color: #fff;
-  font-size: 9px;
-  letter-spacing: 0.06em;
 }

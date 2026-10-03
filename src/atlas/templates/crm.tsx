@@ -10,6 +10,8 @@ import {
   Briefcase,
   CheckCircle2,
   SlidersHorizontal,
+  Sparkles,
+  Plug,
 } from "lucide-react";
 import type { TemplateProps, Entity } from "../types";
 import { list, money, compactMoney, makeId } from "../types";
@@ -27,6 +29,8 @@ import {
   SettingPanel,
   Empty,
   useToast,
+  AIInstructionsPanel,
+  IntegrationsPanel,
 } from "../shared/ui";
 const stages = [
   "Novo contato",
@@ -57,32 +61,56 @@ export default function CRM({ config }: TemplateProps) {
           icon: <LayoutGrid size={18} />,
         },
         { id: "contacts", label: "Contatos", icon: <Users size={18} /> },
+        { id: "ai", label: "Instruções de IA", icon: <Sparkles size={18} /> },
+        { id: "integrations", label: "Integrações", icon: <Plug size={18} /> },
         { id: "settings", label: "Preferências", icon: <Settings size={18} /> },
       ]}
       active={view}
       onNav={setView}
     >
       <PageHead
-        eyebrow="COMERCIAL / VISÃO GERAL"
+        eyebrow={
+          view === "ai"
+            ? "AUTOMAÇÃO / INTELIGÊNCIA ARTIFICIAL"
+            : view === "integrations"
+              ? "AUTOMAÇÃO / ANÚNCIOS"
+              : "COMERCIAL / VISÃO GERAL"
+        }
         title={
           view === "contacts"
             ? "Boas relações começam aqui"
-            : config.content.headline
+            : view === "ai"
+              ? "Ensine sua IA de atendimento"
+              : view === "integrations"
+                ? "Conexões com anúncios"
+                : config.content.headline
         }
-        description={config.content.description}
+        description={
+          view === "ai"
+            ? "Envie materiais, escreva instruções e controle quando a IA pode responder seus contatos."
+            : view === "integrations"
+              ? "Conecte Meta Ads e Google Ads para enriquecer os contatos recebidos pelo CRM."
+              : config.content.description
+        }
       >
-        <Button
-          onClick={() => {
-            setEdit(null);
-            setCreating(true);
-          }}
-        >
-          <Plus size={17} />
-          Nova oportunidade
-        </Button>
+        {view !== "ai" && view !== "integrations" && view !== "settings" && (
+          <Button
+            onClick={() => {
+              setEdit(null);
+              setCreating(true);
+            }}
+          >
+            <Plus size={17} />
+            Nova oportunidade
+          </Button>
+        )}
       </PageHead>
       {view === "settings" ? (
         <SettingPanel />
+      ) : view === "ai" ? (
+        <AIInstructionsPanel />
+      ) : view === "integrations" ? (
+        <IntegrationsPanel />
       ) : (
         <>
           <div className="stat-grid">
