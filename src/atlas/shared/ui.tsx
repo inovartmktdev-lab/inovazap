@@ -802,13 +802,15 @@ export function exportCSV(
 export function WebsiteNav({
   config,
   links,
-  cta = "Vamos conversar",
+  cta = "Entrar",
+  loginHref = "/login",
   onAction,
 }: {
   config: TemplateConfig;
   links: { label: string; href: string }[];
   cta?: string;
-  onAction: () => void;
+  loginHref?: string;
+  onAction?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -822,22 +824,25 @@ export function WebsiteNav({
             {l.label}
           </a>
         ))}
-        <Button
-          variant="secondary"
+      </nav>
+      <div className="web-header-actions">
+        <a
+          className="btn secondary web-nav-login"
+          href={loginHref}
           onClick={() => {
             setOpen(false);
-            onAction();
+            onAction?.();
           }}
         >
           {cta}
-        </Button>
-      </nav>
-      <IconButton
-        label={open ? "Fechar menu" : "Abrir menu"}
-        onClick={() => setOpen(!open)}
-      >
-        {open ? <X /> : <Menu />}
-      </IconButton>
+        </a>
+        <IconButton
+          label={open ? "Fechar menu" : "Abrir menu"}
+          onClick={() => setOpen(!open)}
+        >
+          {open ? <X /> : <Menu />}
+        </IconButton>
+      </div>
     </header>
   );
 }
