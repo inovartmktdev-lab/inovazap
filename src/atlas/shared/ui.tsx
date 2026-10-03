@@ -25,10 +25,19 @@ import {
   Mail,
   CheckCircle2,
   Command,
+  UploadCloud,
+  FileText,
+  FileSpreadsheet,
+  Brain,
+  Trash2,
+  Link2,
+  Unlink,
+  Megaphone,
+  Target as TargetIcon,
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import type { TemplateConfig, NavItem, CSSVars, Entity } from "../types";
-import { asset, money } from "../types";
+import { asset, money, makeId } from "../types";
 const ToastContext = createContext<(text: string) => void>(() => {});
 export const useToast = () => useContext(ToastContext);
 export function TemplateRoot({
@@ -987,3 +996,231 @@ export const commonNav = (
   { id: "overview", label: primary, icon },
   { id: "settings", label: "Preferências", icon: <Settings size={18} /> },
 ];
+export type AIFile = { id: string; name: string; kind: "pdf" | "excel"; size: string };
+export function AIInstructionsPanel() {
+  const toast = useToast();
+  const [files, setFiles] = useState<AIFile[]>([
+    { id: "f1", name: "Catálogo de serviços.pdf", kind: "pdf", size: "842 KB" },
+    { id: "f2", name: "Base de preços.xlsx", kind: "excel", size: "113 KB" },
+  ]);
+  const [instructions, setInstructions] = useState(
+    "Responda sempre em português, com tom cordial e objetivo. Priorize qualificar o contato (nome, necessidade e prazo) antes de falar de preço. Nunca prometa prazos que não constam no catálogo anexado.",
+  );
+  const [learning, setLearning] = useState(true);
+  const [enabled, setEnabled] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleFiles = (list: FileList | null) => {
+    if (!list) return;
+    const added: AIFile[] = Array.from(list).map((f) => ({
+      id: makeId(),
+      name: f.name,
+      kind: /xls|sheet|csv/i.test(f.type) || /\.(xlsx?|csv)$/i.test(f.name) ? "excel" : "pdf",
+      size: `${Math.max(1, Math.round(f.size / 1024))} KB`,
+    }));
+    setFiles((prev) => [...added, ...prev]);
+    toast(`${added.length} arquivo(s) enviado(s) para a IA aprender.`);
+  };
+  return (
+    <div className="stack" style={{ gap: 22 }}>
+      <Panel
+        title="Instruções da IA"
+        subtitle="Ensine a IA sobre o seu negócio: envie materiais e escreva instruções detalhadas de como ela deve responder."
+      >
+        <div className="settings-form" style={{ maxWidth: 760 }}>
+          <label
+            className="ai-dropzone"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              handleFiles(e.dataTransfer.files);
+            }}
+          >
+            <UploadCloud size={28} />
+            <b>Envie PDF ou Excel</b>
+            <span>Arraste os arquivos aqui ou clique para selecionar (catálogos, tabelas de preço, scripts de atendimento)</span>
+            <input
+              ref={inputRef}
+              type="file"
+              accept=".pdf,.xls,.xlsx,.csv"
+              multiple
+              hidden
+              onChange={(e) => handleFiles(e.target.files)}
+            />
+            <Button type="button" variant="secondary" onClick={() => inputRef.current?.click()}>
+              Selecionar arquivos
+            </Button>
+          </label>
+          {files.length > 0 && (
+            <div className="ai-file-list">
+              {files.map((f) => (
+                <div className="ai-file-row" key={f.id}>
+                  <span className={`ai-file-icon ${f.kind}`}>
+                    {f.kind === "pdf" ? <FileText size={17} /> : <FileSpreadsheet size={17} />}
+                  </span>
+                  <div>
+                    <b>{f.name}</b>
+                    <small>{f.size}</small>
+                  </div>
+                  <IconButton
+                    label="Remover arquivo"
+                    onClick={() => {
+                      setFiles((prev) => prev.filter((x) => x.id !== f.id));
+                      toast("Arquivo removido da base de aprendizado.");
+                    }}
+                  >
+                    <Trash2 size={15} />
+                  </IconButton>
+                </div>
+              ))}
+            </div>
+          )}
+          <label className="field">
+            <span>Instruções detalhadas</span>
+            <textarea
+              rows={6}
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+              placeholder="Explique como a IA deve se comportar, o que pode e não pode dizer, tom de voz, regras de preço, etc."
+            />
+          </label>
+          <label className="switch-row">
+            <span>
+              <Brain size={16} style={{ marginRight: 8, verticalAlign: "-3px", color: "var(--accent)" }} />
+              <b>Modo aprendizado</b>
+              <small>
+                A IA fica ativa e lê tudo que chega (mensagens e arquivos) só para aprender, mas não responde aos
+                contatos enquanto este modo estiver ligado.
+              </small>
+            </span>
+            <input
+              type="checkbox"
+              checked={learning}
+              onChange={(e) => {
+                setLearning(e.target.checked);
+                toast(
+                  e.target.checked
+                    ? "Modo aprendizado ativado: a IA só vai estudar o conteúdo."
+                    : "Modo aprendizado desativado.",
+                );
+              }}
+            />
+          </label>
+          <label className="switch-row">
+            <span>
+              <b>Habilitar IA nas conversas</b>
+              <small>
+                {learning
+                  ? "Desligue o modo aprendizado para poder habilitar as respostas automáticas."
+                  : "Quando ativado, a IA passa a responder os contatos usando o que aprendeu."}
+              </small>
+            </span>
+            <input
+              type="checkbox"
+              checked={enabled}
+              disabled={learning}
+              onChange={(e) => {
+                setEnabled(e.target.checked);
+                toast(
+                  e.target.checked
+                    ? "IA habilitada: agora ela responde nas conversas."
+                    : "IA desabilitada nas conversas.",
+                );
+              }}
+            />
+          </label>
+          <div className="inline">
+            <Badge tone={learning ? "warning" : enabled ? "success" : "neutral"}>
+              {learning ? "Somente aprendendo" : enabled ? "Ativa nas conversas" : "Pausada"}
+            </Badge>
+            <Button
+              type="button"
+              onClick={() => toast("Instruções e arquivos salvos para a IA.")}
+            >
+              Salvar instruções
+            </Button>
+          </div>
+        </div>
+      </Panel>
+    </div>
+  );
+}
+export type Connection = {
+  id: "meta" | "google";
+  name: string;
+  description: string;
+  connected: boolean;
+  account?: string;
+};
+export function IntegrationsPanel() {
+  const toast = useToast();
+  const [connections, setConnections] = useState<Connection[]>([
+    {
+      id: "meta",
+      name: "Meta Ads",
+      description: "Instagram e Facebook Ads — importe leads e acompanhe campanhas direto no painel.",
+      connected: false,
+    },
+    {
+      id: "google",
+      name: "Google Ads",
+      description: "Conecte sua conta para acompanhar custo por lead e origem das conversas.",
+      connected: false,
+    },
+  ]);
+  const toggle = (id: Connection["id"]) =>
+    setConnections((prev) =>
+      prev.map((c) =>
+        c.id === id
+          ? {
+              ...c,
+              connected: !c.connected,
+              account: !c.connected ? "conta-anuncios@seunegocio.com" : undefined,
+            }
+          : c,
+      ),
+    );
+  return (
+    <Panel
+      title="Conexões de anúncios"
+      subtitle="Conecte suas contas de mídia paga para a IA considerar a origem dos contatos."
+    >
+      <div className="settings-form" style={{ maxWidth: 760 }}>
+        {connections.map((c) => (
+          <div className="connection-row" key={c.id}>
+            <span className={`connection-icon ${c.id}`}>
+              {c.id === "meta" ? <Megaphone size={19} /> : <TargetIcon size={19} />}
+            </span>
+            <div>
+              <div className="inline">
+                <b>{c.name}</b>
+                <Status value={c.connected ? "Conectado" : "Não conectado"} />
+              </div>
+              <p>{c.description}</p>
+              {c.connected && c.account && <small>Conta: {c.account}</small>}
+            </div>
+            <Button
+              type="button"
+              variant={c.connected ? "ghost" : "secondary"}
+              onClick={() => {
+                toggle(c.id);
+                toast(
+                  c.connected ? `${c.name} desconectado.` : `${c.name} conectado com sucesso.`,
+                );
+              }}
+            >
+              {c.connected ? (
+                <>
+                  <Unlink size={15} /> Desconectar
+                </>
+              ) : (
+                <>
+                  <Link2 size={15} /> Conectar
+                </>
+              )}
+            </Button>
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+}
