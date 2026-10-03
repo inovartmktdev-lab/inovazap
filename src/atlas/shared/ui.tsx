@@ -1167,60 +1167,82 @@ export function IntegrationsPanel() {
       connected: false,
     },
   ]);
-  const toggle = (id: Connection["id"]) =>
+  const [connectingId, setConnectingId] = useState<Connection["id"] | null>(null);
+  const connecting = connections.find((c) => c.id === connectingId) || null;
+  const disconnect = (id: Connection["id"]) => {
+    const target = connections.find((c) => c.id === id);
     setConnections((prev) =>
-      prev.map((c) =>
-        c.id === id
-          ? {
-              ...c,
-              connected: !c.connected,
-              account: !c.connected ? "conta-anuncios@seunegocio.com" : undefined,
-            }
-          : c,
-      ),
+      prev.map((c) => (c.id === id ? { ...c, connected: false, account: undefined } : c)),
     );
+    toast(`${target?.name} desconectado.`);
+  };
   return (
-    <Panel
-      title="Conexões de anúncios"
-      subtitle="Conecte suas contas de mídia paga para a IA considerar a origem dos contatos."
-    >
-      <div className="settings-form" style={{ maxWidth: 760 }}>
-        {connections.map((c) => (
-          <div className="connection-row" key={c.id}>
-            <span className={`connection-icon ${c.id}`}>
-              {c.id === "meta" ? <Megaphone size={19} /> : <TargetIcon size={19} />}
-            </span>
-            <div>
-              <div className="inline">
-                <b>{c.name}</b>
-                <Status value={c.connected ? "Conectado" : "Não conectado"} />
+    <>
+      <Panel
+        title="Conexões de anúncios"
+        subtitle="Conecte suas contas de mídia paga para a IA considerar a origem dos contatos."
+      >
+        <div className="settings-form" style={{ maxWidth: 760 }}>
+          {connections.map((c) => (
+            <div className="connection-row" key={c.id}>
+              <span className={`connection-icon ${c.id}`}>
+                {c.id === "meta" ? <Megaphone size={19} /> : <TargetIcon size={19} />}
+              </span>
+              <div>
+                <div className="inline">
+                  <b>{c.name}</b>
+                  <Status value={c.connected ? "Conectado" : "Não conectado"} />
+                </div>
+                <p>{c.description}</p>
+                {c.connected && c.account && <small>Conta conectada: {c.account}</small>}
               </div>
-              <p>{c.description}</p>
-              {c.connected && c.account && <small>Conta: {c.account}</small>}
-            </div>
-            <Button
-              type="button"
-              variant={c.connected ? "ghost" : "secondary"}
-              onClick={() => {
-                toggle(c.id);
-                toast(
-                  c.connected ? `${c.name} desconectado.` : `${c.name} conectado com sucesso.`,
-                );
-              }}
-            >
               {c.connected ? (
-                <>
+                <Button type="button" variant="ghost" onClick={() => disconnect(c.id)}>
                   <Unlink size={15} /> Desconectar
-                </>
+                </Button>
               ) : (
-                <>
+                <Button type="button" variant="secondary" onClick={() => setConnectingId(c.id)}>
                   <Link2 size={15} /> Conectar
-                </>
+                </Button>
               )}
-            </Button>
-          </div>
-        ))}
-      </div>
-    </Panel>
+            </div>
+          ))}
+        </div>
+      </Panel>
+      <FormModal
+        open={!!connecting}
+        onClose={() => setConnectingId(null)}
+        title={connecting ? `Conectar ${connecting.name}` : "Conectar conta"}
+        description={
+          connecting?.id === "meta"
+            ? "Informe os dados da sua conta de anúncios do Meta (Facebook/Instagram) para liberar a integração."
+            : "Informe os dados da sua conta Google Ads para liberar a integração."
+        }
+        submit="Conectar conta"
+        fields={
+          connecting?.id === "meta"
+            ? [
+                { name: "appId", label: "ID do aplicativo (App ID)" },
+                { name: "accessToken", label: "Token de acesso" },
+                { name: "adAccountId", label: "ID da conta de anúncios" },
+              ]
+            : [
+                { name: "customerId", label: "ID do cliente (Customer ID)" },
+                { name: "developerToken", label: "Token de desenvolvedor" },
+                { name: "email", label: "E-mail da conta Google Ads", type: "email" },
+              ]
+        }
+        onSubmit={(d) => {
+          const id = connecting?.id;
+          if (!id) return;
+          const label = id === "meta" ? d.adAccountId || d.appId : d.email || d.customerId;
+          setConnections((prev) =>
+            prev.map((c) => (c.id === id ? { ...c, connected: true, account: label } : c)),
+          );
+          toast(`${connecting?.name} conectado com sucesso.`);
+          setConnectingId(null);
+        }}
+      />
+    </>
   );
 }
