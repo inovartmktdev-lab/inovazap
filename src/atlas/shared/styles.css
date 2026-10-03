@@ -1013,7 +1013,13 @@ tbody tr:hover {
 .web-header nav > a:hover {
   color: var(--accent);
 }
-.web-header > .icon-button {
+.web-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.web-header-actions > .icon-button {
   display: none;
 }
 .web-header .btn {
@@ -1733,8 +1739,11 @@ tbody tr:hover {
   .web-header {
     padding: 21px 6%;
   }
-  .web-header > .icon-button {
+  .web-header-actions > .icon-button {
     display: flex;
+  }
+  .web-header-actions {
+    gap: 8px;
   }
   .web-header nav {
     display: none;
@@ -6627,88 +6636,6 @@ tbody tr:hover {
   right: 20px;
   bottom: 22px;
   color: #fff;
-  font-size: 8px;
-  letter-spacing: 0.12em;
-  writing-mode: vertical-rl;
+  font-size: 9px;
+  letter-spacing: 0.06em;
 }
-.construction-pillars {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 55px;
-}
-.construction-pillars article {
-  border-top: 1px solid var(--line);
-  padding-top: 25px;
-}
-.construction-pillars .between {
-  color: #b19a6e;
-  font-size: 11px;
-}
-.construction-pillars h3 {
-  font-size: 21px;
-  line-height: 1.2;
-  font-weight: 600;
-  margin-top: 26px;
-}
-.construction-pillars p {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.8;
-  margin-top: 16px;
-}
-.construction-projects {
-  margin-top: 31px;
-}
-.construction-projects .image-wrap {
-  border-radius: 0;
-  height: 280px;
-}
-.construction-projects h3 {
-  font-size: 21px;
-}
-.construction-process {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 60px;
-}
-.construction-process nav {
-  display: grid;
-  align-content: start;
-}
-.construction-process nav > button {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  text-align: left;
-  background: none;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  padding: 24px 18px;
-  font-size: 15px;
-  color: var(--muted);
-}
-.construction-process nav > button > span {
-  font-size: 10px;
-}
-.construction-process nav > button.active {
-  background: #f0ece2;
-  color: #81693d;
-  border-color: #c4ad76;
-}
-.construction-process > div {
-  position: relative;
-  padding: 40px;
-  background: #ebe7db;
-  min-height: 315px;
-}
-.construction-step-number {
-  position: absolute;
-  right: 20px;
-  top: 10px;
-  font-size: 115px;
-  line-height: 1;
-  color: #c9c0a52e;
-  font-weight: 700;
-  letter-spacing: -0.07em;
-}
-.con
