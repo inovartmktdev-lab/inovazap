@@ -830,9 +830,10 @@ select {
   color: var(--muted);
 }
 .table-wrap {
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: scroll;
   width: 100%;
-  max-height: 560px;
+  height: 420px;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
 }
@@ -896,8 +897,8 @@ tbody tr:hover {
 }
 .row-list {
   display: grid;
-  max-height: 520px;
-  overflow-y: auto;
+  height: 420px;
+  overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
 }
@@ -2057,9 +2058,8 @@ tbody tr:hover {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 14px 12px;
-  min-height: 405px;
-  max-height: 640px;
-  overflow-y: auto;
+  height: 480px;
+  overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
 }
@@ -2435,10 +2435,13 @@ tbody tr:hover {
 }
 @media (max-width: 760px) {
   .table-wrap {
-    max-height: 440px;
+    height: 360px;
+  }
+  .row-list {
+    height: 360px;
   }
   .kanban-column {
-    max-height: 480px;
+    height: 400px;
   }
   .inventory-notice {
     flex-wrap: wrap;
@@ -2460,9 +2463,6 @@ tbody tr:hover {
   }
   .tpl-finance .stat > strong {
     font-size: 24px;
-  }
-  .kanban-column {
-    min-height: 390px;
   }
   .inventory-notice .btn {
     margin-left: 32px;
@@ -6620,5 +6620,5 @@ tbody tr:hover {
 }
 .legal-practices article .btn {
   border-radius: 0;
-  font-weight: 600;
+  font-size: 12px;
 }
