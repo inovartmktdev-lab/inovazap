@@ -6620,31 +6620,5 @@ tbody tr:hover {
 }
 .legal-practices article .btn {
   border-radius: 0;
-  font-size: 11px;
-  margin-top: 26px;
-}
-.legal-team {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-}
-.legal-team article {
-  border: 1px solid var(--line);
-  padding: 38px;
-}
-.legal-person-monogram {
-  width: 75px;
-  height: 80px;
-  border: 1px solid #a9865c40;
-  display: grid;
-  place-items: center;
-  font-family: Georgia, serif;
-  font-size: 32px;
-  color: #b69a75;
-  background: linear-gradient(145deg, #a9865c1c, transparent);
-}
-.legal-team h3 {
-  font-family: Georgia, serif;
-  font-size: 20px;
-  font-weight: 400;
+  font-weight: 600;
 }
