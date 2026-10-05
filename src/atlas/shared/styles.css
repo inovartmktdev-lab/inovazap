@@ -2029,6 +2029,22 @@ tbody tr:hover {
   overflow: auto;
   padding-bottom: 18px;
   max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
+}
+.kanban-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.kanban-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.kanban-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 8px;
+}
+.kanban-scroll::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--accent) 65%, transparent);
 }
 .kanban {
   display: grid;
@@ -6629,118 +6645,6 @@ tbody tr:hover {
 }
 .legal-team h3 {
   font-family: Georgia, serif;
-  font-size: 29px;
+  font-size: 20px;
   font-weight: 400;
-  margin-top: 25px;
-}
-.legal-team p {
-  font-size: 12px;
-  color: #b09775;
-  margin-top: 9px;
-}
-.legal-team article > span {
-  font-size: 10px;
-  color: #73818a;
-  margin-top: 20px;
-  display: block;
-}
-.legal-contact {
-  background: #1c252f;
-  text-align: center;
-  padding: 65px;
-  border-block: 1px solid #a9865c44;
-}
-.legal-contact h2 {
-  font-family: Georgia, serif;
-  font-weight: 400;
-  font-size: 59px;
-  line-height: 1.05;
-}
-.legal-contact .btn {
-  margin-top: 30px;
-  border-radius: 0;
-  font-size: 11px;
-  padding: 16px 26px;
-}
-/* Construction & engineering */
-.tpl-construction .brand {
-  font-size: 22px;
-  font-weight: 850;
-  letter-spacing: -0.055em;
-}
-.tpl-construction .brand-mark {
-  border-radius: 0;
-  color: #362e1d;
-}
-.tpl-construction .btn {
-  border-radius: 2px;
-}
-.construction-hero {
-  position: relative;
-  max-width: 1440px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 585px;
-  background: #eae8e1;
-  overflow: hidden;
-}
-.construction-copy {
-  padding: 60px 12%;
-}
-.construction-copy .eyebrow {
-  font-size: 8px;
-  letter-spacing: 0.14em;
-  color: #937343;
-}
-.construction-copy h1 {
-  font-size: clamp(47px, 5.4vw, 75px);
-  font-weight: 600;
-  line-height: 1.07;
-  letter-spacing: -0.055em;
-}
-.construction-copy > p {
-  font-size: 14px;
-  line-height: 1.9;
-  max-width: 380px;
-  color: #8b8a7d;
-  margin: 26px 0 31px;
-}
-.construction-copy .btn {
-  font-size: 11px;
-  padding: 15px 22px;
-  color: #3d311d;
-}
-.construction-hero > .photo {
-  height: 100%;
-  object-position: 66%;
-}
-.construction-hero-note {
-  display: flex;
-  gap: 14px;
-  font-size: 8px;
-  color: #99998c;
-  letter-spacing: 0.08em;
-  align-items: center;
-  margin-top: 45px;
-}
-.construction-hero-note > i {
-  width: 3px;
-  height: 3px;
-  background: #b6a579;
-  border-radius: 50%;
-}
-.construction-label {
-  position: absolute;
-  left: calc(50% - 20px);
-  bottom: 36px;
-  background: #d7a951;
-  color: #423721;
-  padding: 18px 23px;
-  display: flex;
-  align-items: center;
-  gap: 17px;
-  font-size: 9px;
-  line-height: 1.7;
-  letter-spacing: 0.07em;
 }
